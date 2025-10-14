@@ -31,8 +31,8 @@ test.describe('API: Admin patient management', () => {
     });
     const addStatus = addResponse.status();
     const addText = await addResponse.text();
-    console.log('Add patient status:', addStatus);
-    console.log('Add patient body:', addText);
+    // console.log('Add patient status:', addStatus);
+    // console.log('Add patient body:', addText);
     expect(addResponse.ok()).toBeTruthy();
 
     // Fetch all patients and get the last one (assume it's the one just added)
@@ -44,7 +44,7 @@ test.describe('API: Admin patient management', () => {
     );
     expect(getAllResponse.ok()).toBeTruthy();
     const allPatients = await getAllResponse.json();
-    console.log('All patients:', allPatients);
+    // console.log('All patients:', allPatients);
     const lastPatient = allPatients[allPatients.length - 1];
     expect(lastPatient).toBeTruthy();
     patientId = lastPatient.patientId || lastPatient.PatientID || lastPatient.id;

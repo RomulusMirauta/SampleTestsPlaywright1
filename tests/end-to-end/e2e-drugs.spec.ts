@@ -65,7 +65,7 @@ test('E2E: add and remove drug (UI + DB check)', async ({ page }) => {
   }
 
   // 8. Check drug is gone from the list
-  await expect(page.locator('.drugs-list .drug-card .drug-name', { hasText: drugData.name })).not.toBeVisible();
+  await expect(page.locator('.drugs-list .drug-card .drug-name', { hasText: drugData.name })).toHaveCount(0);
 
   // 9. Press Back
   await page.getByRole('button', { name: /back/i }).click();
@@ -74,7 +74,7 @@ test('E2E: add and remove drug (UI + DB check)', async ({ page }) => {
   await page.locator('.db-label', { hasText: 'Drugs' }).click();
 
   // 11. Check drug is gone from the list
-  await expect(page.locator('.drugs-list .drug-card .drug-name', { hasText: drugData.name })).not.toBeVisible();
+  await expect(page.locator('.drugs-list .drug-card .drug-name', { hasText: drugData.name })).toHaveCount(0);
 
   // 12. DB check: drug was added and deleted
   const pool = await sql.connect(dbConfig);

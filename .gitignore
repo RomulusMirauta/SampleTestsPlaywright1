@@ -12,6 +12,7 @@ test-results/
 .donotpush/
 *.sh
 .chatmodes
+README-inspiration.md
 
 # Playwright
 /playwright-report/

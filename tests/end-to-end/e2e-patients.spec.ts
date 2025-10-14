@@ -72,20 +72,19 @@ test('E2E: add and remove patient (UI + DB check)', async ({ page }) => {
     }
   }
 
-  // 10. Check patient is gone from the list
+  // 8. Check patient is gone from the list
   await expect(page.locator('.patient-name', { hasText: `${patientData.firstName} ${patientData.lastName}` })).not.toBeVisible();
 
-  // 8. Press Back
+  // 9. Press Back
   await page.getByRole('button', { name: /back/i }).click();
 
-  // 9. Go to Patients again
+  // 10. Go to Patients again
   await page.locator('.db-label', { hasText: 'Patients' }).click();
 
-  // 10. Check patient is gone from the list
+  // 11. Check patient is gone from the list
   await expect(page.locator('.patient-name', { hasText: `${patientData.firstName} ${patientData.lastName}` })).not.toBeVisible();
 
-
-  // 11. DB check: patient was added and deleted
+  // 12. DB check: patient was deleted
   const pool = await sql.connect(dbConfig);
   const result = await pool.request()
     .input('firstName', sql.VarChar, patientData.firstName)

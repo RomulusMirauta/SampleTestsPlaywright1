@@ -28,15 +28,15 @@ test.describe('API: Admin drug management', () => {
     });
     const addStatus = addResponse.status();
     const addText = await addResponse.text();
-    console.log('Add drug status:', addStatus);
-    console.log('Add drug body:', addText);
+    // console.log('Add drug status:', addStatus);
+    // console.log('Add drug body:', addText);
     expect(addResponse.ok()).toBeTruthy();
 
     // Fetch all drugs and get the last one (assume it's the one just added)
     const getAllResponse = await apiContext.get(baseUrl + `api/drugs?username=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.username)}&password=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.password)}`);
     expect(getAllResponse.ok()).toBeTruthy();
     const allDrugs = await getAllResponse.json();
-    console.log('All drugs:', allDrugs);
+    // console.log('All drugs:', allDrugs);
     const lastDrug = allDrugs[allDrugs.length - 1];
     expect(lastDrug).toBeTruthy();
     drugId = lastDrug.drugId || lastDrug.DrugID || lastDrug.id;
