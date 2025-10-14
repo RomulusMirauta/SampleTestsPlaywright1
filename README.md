@@ -45,6 +45,8 @@ The Test Object is available here: [SampleTestObject1](https://github.com/Romulu
 
 This project was developed as a sample for healthcare platform test automation. It was inspired by full-stack healthcare platform projects and built with the help of GitHub Copilot  (model GPT-4.1).
 
+<br>
+
 ## Main Features
 
 - **End-to-End Testing:** Automated UI tests for login, dashboard, patients, and drugs pages, simulating real user interactions.
@@ -56,6 +58,7 @@ This project was developed as a sample for healthcare platform test automation. 
 - **Modern Test Structure:** Uses Playwright fixtures and page objects for maintainable, scalable tests.
 - **CI Integration:** Automated test runs with GitHub Actions.
 
+<br>
 
 ## Prerequisites
 
@@ -63,6 +66,7 @@ This project was developed as a sample for healthcare platform test automation. 
 - npm
 - Microsoft SQL Server (or compatible)
 
+<br>
 
 ## Setup
 
@@ -105,7 +109,6 @@ This project was developed as a sample for healthcare platform test automation. 
 This project includes GitHub Actions integration for automated test runs. See the `.github/workflows/playwright.yml` file for details.
 
 <br>
-
 
 ## Main Technologies Used
 
