@@ -20,8 +20,8 @@ Table of Contents
 - [Running Tests](#running-tests)
 - [Notes](#notes)
 - [CI Integration](#ci-integration)
-- [Technologies Used](#technologies-used)
-- [About](#about)
+- [Main Technologies Used](#main-technologies-used)
+- [SW Info](#sw-info)
 - [Screenshots](#screenshots)
   - [Playwright in Visual Studio Code](#playwright-in-visual-studio-code)
   - [Playwright HTML Report](#playwright-html-report)
@@ -42,6 +42,8 @@ This repository contains Playwright-based test automation for a sample healthcar
 The tests cover both UI and API functionality, and include database validation using direct SQL queries.
 
 The Test Object is available here: [SampleTestObject1](https://github.com/RomulusMirauta/SampleTestObject1).
+
+This project was developed as a sample for healthcare platform test automation. It was inspired by full-stack healthcare platform projects and built with the help of GitHub Copilot  (model GPT-4.1).
 
 ## Main Features
 
@@ -104,18 +106,24 @@ This project includes GitHub Actions integration for automated test runs. See th
 
 <br>
 
-## Technologies Used
 
-- Playwright (test runner)
-- Node.js
-- TypeScript
-- Microsoft SQL Server
+## Main Technologies Used
+
+- **Playwright**: Test runner and automation framework for UI, API, and compatibility testing (see all test files in `tests/` and config in `playwright.config.ts`).
+- **Node.js**: JavaScript runtime environment for running Playwright tests and scripts (project root, all test execution).
+- **TypeScript**: Main language for test code, providing type safety and modern JavaScript features (all `.ts` files in `tests/`).
+- **Microsoft SQL Server**: Database used for backend data storage and validation in tests (queried directly in test files like `db-utils.ts` and end-to-end specs).
 
 <br>
 
-## About
+## SW Info
 
-This project was developed as a sample for healthcare platform test automation and as a test object for Playwright E2E and API testing. Inspired by full-stack healthcare platform projects and built with the help of GitHub Copilot.
+- **Platform:** Runs locally on Windows (tested with PowerShell and Node.js)
+- **Database:** MS SQL Server, SQL Server 2022 Configuration Manager, SQL Server Management Studio 21, Azure Data Studio
+- **Code Editor:** Visual Studio Code
+- **Browsers:** Google Chrome (Chromium), Mozilla Firefox (Firefox), Safari (WebKit)
+
+<br>
 
 ## Screenshots
 
