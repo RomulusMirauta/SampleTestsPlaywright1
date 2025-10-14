@@ -13,23 +13,23 @@ A sample healthcare test automation project using Playwright for End-to-End, API
 Table of Contents
 </h2>
 
-- [Project Overview](#project-overview)
-- [Main Features](#main-features)
-- [Prerequisites](#prerequisites)
-- [Setup](#setup)
-- [Running Tests](#running-tests)
-- [Notes](#notes)
-- [CI Integration](#ci-integration)
-- [Main Technologies Used](#main-technologies-used)
-- [SW Info](#sw-info)
-- [Screenshots](#screenshots)
+- [I. Project Overview](#i-project-overview)
+- [II. Main Features](#ii-main-features)
+- [III. Prerequisites](#iii-prerequisites)
+- [IV. Setup](#iv-setup)
+- [V. Running Tests](#v-running-tests)
+- [VI. Notes](#vi-notes)
+- [VII. CI Integration](#vii-ci-integration)
+- [VIII. Main Technologies Used](#viii-main-technologies-used)
+- [IX. SW Info](#ix-sw-info)
+- [X. Screenshots](#x-screenshots)
   - [Playwright in Visual Studio Code](#playwright-in-visual-studio-code)
   - [Playwright HTML Report](#playwright-html-report)
   - [GitHub Actions - CI Integration - Workflow Example](#github-actions---ci-integration---workflow-example)
 
 <br>
 
-## Project Overview
+## I. Project Overview
 
 This repository contains Playwright-based test automation for a sample healthcare platform. The platform includes:
 
@@ -47,7 +47,7 @@ This project was developed as a sample for healthcare platform test automation. 
 
 <br>
 
-## Main Features
+## II. Main Features
 
 - **End-to-End Testing:** Automated UI tests for login, dashboard, patients, and drugs pages, simulating real user interactions.
 - **API Testing:** Automated tests for all main API endpoints (patients, drugs) to ensure backend reliability.
@@ -60,7 +60,7 @@ This project was developed as a sample for healthcare platform test automation. 
 
 <br>
 
-## Prerequisites
+## III. Prerequisites
 
 - Node.js (v16+ recommended)
 - npm
@@ -68,7 +68,7 @@ This project was developed as a sample for healthcare platform test automation. 
 
 <br>
 
-## Setup
+## IV. Setup
 
 1. Install dependencies:
 
@@ -80,7 +80,7 @@ This project was developed as a sample for healthcare platform test automation. 
 
 <br>
 
-## Running Tests
+## V. Running Tests
 
 - Run all tests:
 
@@ -96,7 +96,7 @@ This project was developed as a sample for healthcare platform test automation. 
 
 <br>
 
-## Notes
+## VI. Notes
 
 - Use `tests/db-utils.ts` to query your SQL database in tests.
 - Add more `.spec.ts` files in the `tests/` folder for additional test cases.
@@ -104,13 +104,13 @@ This project was developed as a sample for healthcare platform test automation. 
 
 <br>
 
-## CI Integration
+## VII. CI Integration
 
 This project includes GitHub Actions integration for automated test runs. See the `.github/workflows/playwright.yml` file for details.
 
 <br>
 
-## Main Technologies Used
+## VIII. Main Technologies Used
 
 - **Playwright**: Test runner and automation framework for UI, API, and compatibility testing (see all test files in `tests/` and config in `playwright.config.ts`).
 - **Node.js**: JavaScript runtime environment for running Playwright tests and scripts (project root, all test execution).
@@ -119,7 +119,7 @@ This project includes GitHub Actions integration for automated test runs. See th
 
 <br>
 
-## SW Info
+## IX. SW Info
 
 - **Platform:** Runs locally on Windows (tested with PowerShell and Node.js)
 - **Database:** MS SQL Server, SQL Server 2022 Configuration Manager, SQL Server Management Studio 21, Azure Data Studio
@@ -128,7 +128,7 @@ This project includes GitHub Actions integration for automated test runs. See th
 
 <br>
 
-## Screenshots
+## X. Screenshots
 
 ### Playwright in Visual Studio Code
 
