@@ -1,0 +1,4 @@
+[
+  { "name": "John Doe", "dob": "1980-01-01", "status": "active" },
+  { "name": "Jane Smith", "dob": "1990-05-15", "status": "inactive" }
+]
