@@ -103,8 +103,6 @@ This project was developed as a sample for healthcare platform test automation. 
 - Add more `.spec.ts` files in the `tests/` folder for additional test cases.
 - Test data and credentials are for demonstration only. Do not use in production!
 
-<br>
-
 ### Environment variables / secrets
 
 The tests read sensitive values from environment variables. Set these in your shell or CI secrets before running tests.
@@ -120,6 +118,8 @@ $env:DB_PASSWORD = 'your-db-password';
 $env:TEST_ADMIN_PASSWORD = 'your-admin-password';
 npx playwright test
 ```
+
+<br>
 
 ## VII. CI Integration
 

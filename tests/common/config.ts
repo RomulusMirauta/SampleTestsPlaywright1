@@ -22,6 +22,4 @@ export const DB_CONFIG = {
 	},
 };
 
-
-
 export const DEFAULT_WORKERS = parseInt(process.env.PW_WORKERS || '4', 10);
