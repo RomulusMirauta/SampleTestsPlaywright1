@@ -5,15 +5,6 @@ import { DB_CONFIG } from '../common/config';
 import { LoginPage } from '../page-objects/LoginPage';
 import { DrugsPage } from '../page-objects/DrugsPage';
 
-const dbConfig = {
-  user: 'sa',
-  password: 'sa57843hFL^%*#',
-  server: 'localhost',
-  database: 'HealthcareDB',
-  options: {
-    trustServerCertificate: true,
-  },
-};
 
 const drugData = {
   name: 'E2E TestDrug',
@@ -44,6 +35,7 @@ test('E2E: add and remove drug (UI + DB check)', async ({ page }) => {
   await expect(page.locator('.drugs-list .drug-card .drug-name', { hasText: drugData.name })).toHaveCount(0);
 
   // 6. DB check: drug was added and deleted
+  // const pool = await sql.connect(DB_CONFIG as any);
   const pool = await sql.connect(DB_CONFIG as any);
   const result = await pool.request()
     .input('name', sql.VarChar, drugData.name)

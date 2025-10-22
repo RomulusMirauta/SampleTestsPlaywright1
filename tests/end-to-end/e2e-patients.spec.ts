@@ -5,15 +5,7 @@ import { DB_CONFIG } from '../common/config';
 import { LoginPage } from '../page-objects/LoginPage';
 import { PatientsPage } from '../page-objects/PatientsPage';
 
-const dbConfig = {
-  user: 'sa', // update with your SQL Server username
-  password: 'sa57843hFL^%*#', // update with your SQL Server password
-  server: 'localhost',
-  database: 'HealthcareDB',
-  options: {
-    trustServerCertificate: true,
-  },
-};
+
 
 const patientData = {
   firstName: 'E2E',

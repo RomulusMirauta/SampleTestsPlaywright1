@@ -36,6 +36,16 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
+      # Validate required secrets are available in the runner environment.
+      - name: Validate required environment variables
+        run: |
+          node ./scripts/validate-env.js
+        # If secrets are not configured in the repository settings, this will fail and
+        # stop the job with a helpful message. Configure the following secrets in
+        # your repository or organization settings: DB_USER, DB_PASSWORD, DB_SERVER, DB_NAME,
+        # TEST_ADMIN_USERNAME, TEST_ADMIN_PASSWORD, TEST_USER_DRUGS_USERNAME, TEST_USER_DRUGS_PASSWORD,
+        # TEST_USER_PATIENTS_USERNAME, TEST_USER_PATIENTS_PASSWORD
+
       - name: Check if platform is available
         id: check_platform
         run: |

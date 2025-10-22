@@ -1,4 +1,13 @@
 import { test as base, Browser, BrowserContext, Page, APIRequestContext, request } from '@playwright/test';
+// Load local .env for developer convenience if present and not running in CI
+if (!process.env.CI) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    require('dotenv').config();
+  } catch (e) {
+    // dotenv is optional; ignore if not installed
+  }
+}
 import { LoginPage } from '../page-objects/LoginPage';
 import { PatientsPage } from '../page-objects/PatientsPage';
 import { DrugsPage } from '../page-objects/DrugsPage';

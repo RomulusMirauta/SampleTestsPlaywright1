@@ -19,6 +19,7 @@ Table of Contents
 - [IV. Setup](#iv-setup)
 - [V. Running Tests](#v-running-tests)
 - [VI. Notes](#vi-notes)
+  - [Environment variables / secrets](#environment-variables--secrets)
 - [VII. CI Integration](#vii-ci-integration)
 - [VIII. Main Technologies Used](#viii-main-technologies-used)
 - [IX. SW Info](#ix-sw-info)
@@ -103,6 +104,22 @@ This project was developed as a sample for healthcare platform test automation. 
 - Test data and credentials are for demonstration only. Do not use in production!
 
 <br>
+
+### Environment variables / secrets
+
+The tests read sensitive values from environment variables. Set these in your shell or CI secrets before running tests.
+
+- DB: `DB_USER`, `DB_PASSWORD`, `DB_SERVER`, `DB_NAME`
+- Test credentials: `TEST_ADMIN_USERNAME`, `TEST_ADMIN_PASSWORD`, `TEST_USER_DRUGS_USERNAME`, `TEST_USER_DRUGS_PASSWORD`, `TEST_USER_PATIENTS_USERNAME`, `TEST_USER_PATIENTS_PASSWORD`
+- Optional: `BASE_URL`, `PW_WORKERS`
+
+Example (PowerShell):
+
+```powershell
+$env:DB_PASSWORD = 'your-db-password';
+$env:TEST_ADMIN_PASSWORD = 'your-admin-password';
+npx playwright test
+```
 
 ## VII. CI Integration
 

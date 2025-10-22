@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "test:ui": "npx playwright test && npx playwright show-report"
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "test:ui": "npx playwright test && npx playwright show-report",
+  "validate-env": "node ./scripts/validate-env.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "@types/node": "^24.7.2",
     "playwright": "^1.56.0",
     "ts-node": "^10.9.2",
+  "dotenv": "^16.3.1",
     "typescript": "^5.9.3"
   },
   "dependencies": {
