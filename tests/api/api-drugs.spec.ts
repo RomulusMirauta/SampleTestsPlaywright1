@@ -1,5 +1,6 @@
 import { test, expect, request, APIRequestContext } from '@playwright/test';
 import { TEST_ADMIN_CREDENTIALS } from '../common/auth';
+import { DrugsService } from './services/drugs.service';
 
 const baseUrl = 'http://localhost:3001/';
 
@@ -11,50 +12,55 @@ const drugData = {
 
 test.describe('API: Admin drug management', () => {
   let apiContext: APIRequestContext;
+  let service: DrugsService;
   let drugId: number | undefined;
 
   test.beforeAll(async ({ playwright }) => {
     apiContext = await request.newContext();
+    service = new DrugsService(apiContext, baseUrl);
   });
 
   test('add, check, and remove drug', async () => {
-    // Add drug (include credentials in body)
-    const addResponse = await apiContext.post(baseUrl + 'api/drugs', {
-      data: {
-        ...drugData,
-        username: TEST_ADMIN_CREDENTIALS.username,
-        password: TEST_ADMIN_CREDENTIALS.password,
-      },
+    // Add drug
+    const addResponse = await service.addDrug(drugData, {
+      username: TEST_ADMIN_CREDENTIALS.username,
+      password: TEST_ADMIN_CREDENTIALS.password,
     });
-    const addStatus = addResponse.status();
-    const addText = await addResponse.text();
-    // console.log('Add drug status:', addStatus);
-    // console.log('Add drug body:', addText);
+    if (!addResponse.ok()) {
+      const text = await addResponse.text();
+      console.error('Add drug failed:', addResponse.status(), text);
+    }
     expect(addResponse.ok()).toBeTruthy();
 
     // Fetch all drugs and get the last one (assume it's the one just added)
-    const getAllResponse = await apiContext.get(baseUrl + `api/drugs?username=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.username)}&password=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.password)}`);
-    expect(getAllResponse.ok()).toBeTruthy();
-    const allDrugs = await getAllResponse.json();
-    // console.log('All drugs:', allDrugs);
+    const getAllResponse = await service.getAllDrugs({
+      username: TEST_ADMIN_CREDENTIALS.username,
+      password: TEST_ADMIN_CREDENTIALS.password,
+    });
+    const allDrugs = await service.jsonOrThrow(getAllResponse);
     const lastDrug = allDrugs[allDrugs.length - 1];
     expect(lastDrug).toBeTruthy();
     drugId = lastDrug.drugId || lastDrug.DrugID || lastDrug.id;
     expect(drugId).toBeTruthy();
 
-    // Check if drug was added (validate details from the list)
+    // Validate details
     expect(lastDrug.name || lastDrug.Name).toBe(drugData.name);
     expect(lastDrug.description || lastDrug.Description).toBe(drugData.description);
     expect(lastDrug.dosage || lastDrug.Dosage).toBe(drugData.dosage);
 
-    // Remove drug (include credentials in query)
-    const delResponse = await apiContext.delete(baseUrl + `api/drugs/${drugId}?username=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.username)}&password=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.password)}`);
+    // Remove drug
+    const delResponse = await service.deleteDrug(drugId!, {
+      username: TEST_ADMIN_CREDENTIALS.username,
+      password: TEST_ADMIN_CREDENTIALS.password,
+    });
     expect(delResponse.ok()).toBeTruthy();
 
     // Fetch all drugs again and check drug is removed
-    const getAllAfterDelete = await apiContext.get(baseUrl + `api/drugs?username=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.username)}&password=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.password)}`);
-    expect(getAllAfterDelete.ok()).toBeTruthy();
-    const drugsAfterDelete = await getAllAfterDelete.json();
+    const getAllAfterDelete = await service.getAllDrugs({
+      username: TEST_ADMIN_CREDENTIALS.username,
+      password: TEST_ADMIN_CREDENTIALS.password,
+    });
+    const drugsAfterDelete = await service.jsonOrThrow(getAllAfterDelete);
     const stillExists = drugsAfterDelete.some((d: any) =>
       (d.drugId || d.DrugID || d.id) === drugId
     );

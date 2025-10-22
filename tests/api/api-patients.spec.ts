@@ -1,5 +1,6 @@
 import { test, expect, request, APIRequestContext } from '@playwright/test';
 import { TEST_ADMIN_CREDENTIALS } from '../common/auth';
+import { PatientsService } from './services/patients.service';
 
 const baseUrl = 'http://localhost:3001/';
 
@@ -14,37 +15,31 @@ const patientData = {
 
 test.describe('API: Admin patient management', () => {
   let apiContext: APIRequestContext;
+  let service: PatientsService;
   let patientId: number | undefined;
 
   test.beforeAll(async ({ playwright }) => {
     apiContext = await request.newContext();
+    service = new PatientsService(apiContext, baseUrl);
   });
 
   test('add, check, and remove patient', async () => {
-    // Add patient (include credentials in body)
-    const addResponse = await apiContext.post(baseUrl + 'api/patients', {
-      data: {
-        ...patientData,
-        username: TEST_ADMIN_CREDENTIALS.username,
-        password: TEST_ADMIN_CREDENTIALS.password,
-      },
+    const addResponse = await service.addPatient(patientData, {
+      username: TEST_ADMIN_CREDENTIALS.username,
+      password: TEST_ADMIN_CREDENTIALS.password,
     });
-    const addStatus = addResponse.status();
-    const addText = await addResponse.text();
-    // console.log('Add patient status:', addStatus);
-    // console.log('Add patient body:', addText);
+    if (!addResponse.ok()) {
+      const text = await addResponse.text();
+      console.error('Add patient failed:', addResponse.status(), text);
+    }
     expect(addResponse.ok()).toBeTruthy();
 
     // Fetch all patients and get the last one (assume it's the one just added)
-    const getAllResponse = await apiContext.get(
-      baseUrl +
-        `api/patients?username=${encodeURIComponent(
-          TEST_ADMIN_CREDENTIALS.username
-        )}&password=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.password)}`
-    );
-    expect(getAllResponse.ok()).toBeTruthy();
-    const allPatients = await getAllResponse.json();
-    // console.log('All patients:', allPatients);
+    const getAllResponse = await service.getAllPatients({
+      username: TEST_ADMIN_CREDENTIALS.username,
+      password: TEST_ADMIN_CREDENTIALS.password,
+    });
+    const allPatients = await service.jsonOrThrow(getAllResponse);
     const lastPatient = allPatients[allPatients.length - 1];
     expect(lastPatient).toBeTruthy();
     patientId = lastPatient.patientId || lastPatient.PatientID || lastPatient.id;
@@ -54,24 +49,19 @@ test.describe('API: Admin patient management', () => {
     expect(lastPatient.firstName || lastPatient.FirstName).toBe(patientData.firstName);
     expect(lastPatient.lastName || lastPatient.LastName).toBe(patientData.lastName);
 
-    // Remove patient (include credentials in query)
-    const delResponse = await apiContext.delete(
-      baseUrl +
-        `api/patients/${patientId}?username=${encodeURIComponent(
-          TEST_ADMIN_CREDENTIALS.username
-        )}&password=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.password)}`
-    );
+    // Remove patient
+    const delResponse = await service.deletePatient(patientId!, {
+      username: TEST_ADMIN_CREDENTIALS.username,
+      password: TEST_ADMIN_CREDENTIALS.password,
+    });
     expect(delResponse.ok()).toBeTruthy();
 
     // Fetch all patients again and check patient is removed
-    const getAllAfterDelete = await apiContext.get(
-      baseUrl +
-        `api/patients?username=${encodeURIComponent(
-          TEST_ADMIN_CREDENTIALS.username
-        )}&password=${encodeURIComponent(TEST_ADMIN_CREDENTIALS.password)}`
-    );
-    expect(getAllAfterDelete.ok()).toBeTruthy();
-    const patientsAfterDelete = await getAllAfterDelete.json();
+    const getAllAfterDelete = await service.getAllPatients({
+      username: TEST_ADMIN_CREDENTIALS.username,
+      password: TEST_ADMIN_CREDENTIALS.password,
+    });
+    const patientsAfterDelete = await service.jsonOrThrow(getAllAfterDelete);
     const stillExists = patientsAfterDelete.some((p: any) =>
       (p.patientId || p.PatientID || p.id) === patientId
     );

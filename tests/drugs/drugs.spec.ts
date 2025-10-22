@@ -1,9 +1,26 @@
 import { test, expect, Page } from '@playwright/test';
+import { LoginPage } from '../page-objects/LoginPage';
+import { DrugsPage } from '../page-objects/DrugsPage';
+import { TEST_ADMIN_CREDENTIALS } from '../common/auth';
 
-// Placeholder for drugs CRUD tests
-// Add: login, navigate to drugs, add/edit/delete drug, verify in UI and DB
+test('add and remove drug via UI', async ({ page }: { page: Page }) => {
+  const login = new LoginPage(page);
+  const drugs = new DrugsPage(page);
 
-test('add new drug (placeholder)', async ({ page }: { page: Page }) => {
-  // Implement login and add drug flow
-  // Assert drug appears in list and in DB
+  const name = `ui-test-${Date.now()}`;
+  const description = 'Automated test drug';
+  const dosage = '10mg';
+
+  await login.goto();
+  await login.login(TEST_ADMIN_CREDENTIALS.username, TEST_ADMIN_CREDENTIALS.password);
+
+  await drugs.goto();
+  await drugs.addDrug(name, description, dosage);
+
+  const match = page.locator('.drugs-list .drug-card .drug-name', { hasText: name });
+  await expect(match.first()).toBeVisible();
+
+  // Cleanup
+  await drugs.removeDrugByDetails(name, description, dosage);
+  await expect(page.locator('.drugs-list .drug-card .drug-name', { hasText: name })).toHaveCount(0);
 });

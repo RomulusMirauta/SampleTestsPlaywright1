@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import sql from 'mssql';
 import { TEST_ADMIN_CREDENTIALS } from '../common/auth';
+import { DB_CONFIG } from '../common/config';
+import { LoginPage } from '../page-objects/LoginPage';
+import { PatientsPage } from '../page-objects/PatientsPage';
 
-const baseUrl = 'http://localhost:3001/';
 const dbConfig = {
   user: 'sa', // update with your SQL Server username
   password: 'sa57843hFL^%*#', // update with your SQL Server password
@@ -22,70 +24,35 @@ const patientData = {
 };
 
 test('E2E: add and remove patient (UI + DB check)', async ({ page }) => {
+  const login = new LoginPage(page);
+  const patients = new PatientsPage(page);
+
   // 1. Log in as admin
-  await page.goto(baseUrl);
-  await page.getByPlaceholder('Username').fill(TEST_ADMIN_CREDENTIALS.username);
-  await page.getByPlaceholder('Password').fill(TEST_ADMIN_CREDENTIALS.password);
-  await page.getByRole('button', { name: /login/i }).click();
+  await login.goto();
+  await login.login(TEST_ADMIN_CREDENTIALS.username, TEST_ADMIN_CREDENTIALS.password);
 
-  // 2. Go to Patients page
-  await expect(page.locator('.db-label', { hasText: 'Patients' })).toBeVisible();
-  await page.locator('.db-label', { hasText: 'Patients' }).click();
+  // 2. Go to Patients page and add
+  await patients.goto();
+  await patients.addPatient(
+    patientData.firstName,
+    patientData.lastName,
+    patientData.dob,
+    patientData.gender,
+    patientData.address
+  );
 
-  // 3. Add a patient
-  await page.getByPlaceholder('First Name').fill(patientData.firstName);
-  await page.getByPlaceholder('Last Name').fill(patientData.lastName);
-  // Click the calendar icon and then the Today button
-  await page.locator('input#dob').click();
-  await page.locator('button#fillTodayBtn').click();
-  await page.getByPlaceholder('Gender').fill(patientData.gender);
-  await page.getByPlaceholder('Address').fill(patientData.address);
-  await page.getByRole('button', { name: /add patient/i }).click();
+  // 3. Ensure patient appears
+  const matching = page.locator('.patient-name', { hasText: `${patientData.firstName} ${patientData.lastName}` });
+  await expect(matching.first()).toBeVisible();
 
-  // 4. Press Back
-  await page.getByRole('button', { name: /back/i }).click();
+  // 4. Remove all matching entries
+  await patients.removePatientByDetails(patientData.firstName, patientData.lastName);
 
-  // 5. Go to Patients again
-  await page.locator('.db-label', { hasText: 'Patients' }).click();
+  // 5. Verify gone
+  await expect(page.locator('.patient-name', { hasText: `${patientData.firstName} ${patientData.lastName}` })).toHaveCount(0);
 
-  // 6. Check if at least one matching patient appears in the list (handle multiple occurrences)
-  const matchingNames = page.locator('.patient-name', { hasText: `${patientData.firstName} ${patientData.lastName}` });
-  await expect(matchingNames.first()).toBeVisible();
-  const visibleCount = await matchingNames.count();
-  expect(visibleCount).toBeGreaterThan(0);
-
-  // 7. Delete all matching test patients (in case of duplicates)
-  const patientCards = page.locator('.patient-card', { hasText: `${patientData.firstName} ${patientData.lastName}` });
-  const count = await patientCards.count();
-  for (let i = 0; i < count; i++) {
-    // Use first() since the list updates after each removal
-    const card = patientCards.nth(0);
-    // Optionally check address for extra safety
-    const addressText = await card.locator('.patient-details').textContent();
-    if (addressText && addressText.includes(patientData.address)) {
-      page.once('dialog', async dialog => {
-        await dialog.accept();
-      });
-      await card.locator('button.remove-btn').click();
-      // Wait for the card to be removed
-      await expect(card).not.toBeVisible({ timeout: 5000 }).catch(() => {});
-    }
-  }
-
-  // 8. Check patient is gone from the list
-  await expect(page.locator('.patient-name', { hasText: `${patientData.firstName} ${patientData.lastName}` })).not.toBeVisible();
-
-  // 9. Press Back
-  await page.getByRole('button', { name: /back/i }).click();
-
-  // 10. Go to Patients again
-  await page.locator('.db-label', { hasText: 'Patients' }).click();
-
-  // 11. Check patient is gone from the list
-  await expect(page.locator('.patient-name', { hasText: `${patientData.firstName} ${patientData.lastName}` })).not.toBeVisible();
-
-  // 12. DB check: patient was deleted
-  const pool = await sql.connect(dbConfig);
+  // 6. DB check: patient was deleted
+  const pool = await sql.connect(DB_CONFIG as any);
   const result = await pool.request()
     .input('firstName', sql.VarChar, patientData.firstName)
     .input('lastName', sql.VarChar, patientData.lastName)
