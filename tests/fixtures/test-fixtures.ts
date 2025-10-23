@@ -8,9 +8,7 @@ if (!process.env.CI) {
     // dotenv is optional; ignore if not installed
   }
 }
-import { LoginPage } from '../page-objects/LoginPage';
-import { PatientsPage } from '../page-objects/PatientsPage';
-import { DrugsPage } from '../page-objects/DrugsPage';
+import { LoginPage, PatientsPage, DrugsPage } from '../page-objects/';
 import { BASE_URL } from '../common/config';
 
 type TestFixtures = {
@@ -21,22 +19,22 @@ type TestFixtures = {
 };
 
 export const test = base.extend<TestFixtures>({
-  apiContext: async ({}, use) => {
+  apiContext: async ({}, use: (ctx: APIRequestContext) => Promise<void>) => {
     const ctx = await request.newContext();
     await use(ctx);
     await ctx.dispose();
   },
 
-  loginPage: async ({ page }, use) => {
+  loginPage: async ({ page }: { page: Page }, use: (lp: LoginPage) => Promise<void>) => {
     await page.goto(BASE_URL);
     await use(new LoginPage(page));
   },
 
-  patientsPage: async ({ page }, use) => {
+  patientsPage: async ({ page }: { page: Page }, use: (pp: PatientsPage) => Promise<void>) => {
     await use(new PatientsPage(page));
   },
 
-  drugsPage: async ({ page }, use) => {
+  drugsPage: async ({ page }: { page: Page }, use: (dp: DrugsPage) => Promise<void>) => {
     await use(new DrugsPage(page));
   },
 });
