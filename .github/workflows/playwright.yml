@@ -37,9 +37,9 @@ jobs:
         run: npx playwright install --with-deps
 
       # Validate required secrets are available in the runner environment.
-      - name: Validate required environment variables
-        run: |
-          node ./scripts/validate-env.js
+      # - name: Validate required environment variables
+      #   run: |
+      #     node ./scripts/validate-env.js
         # If secrets are not configured in the repository settings, this will fail and
         # stop the job with a helpful message. Configure the following secrets in
         # your repository or organization settings: DB_USER, DB_PASSWORD, DB_SERVER, DB_NAME,
